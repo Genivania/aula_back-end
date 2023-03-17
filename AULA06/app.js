@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Objetivo: Criar um a API para manioulação de dados de Estados e Cidades
+ * Objetivo: Criar um a API para manipulação de dados de Estados e Cidades
  * Autor: Genivania Macedo
  * Data: 10/03/2023
  * Versão: 1.0
@@ -26,8 +26,8 @@ const cors = require('cors');
 //Responsavel pelas manipulações do body(corpo) da requisições
 const bodyParser = require('body-parser');
 
- //Import do arquivo de funções
- const estadosCidades = require('./modulo/estados_cidades.js');
+//Import do arquivo de funções
+const estadosCidades = require('./modulo/estados_cidades.js');
 
 //Cria um objeto com as informações da classe express
 const app = express();
@@ -52,7 +52,7 @@ app.use((request, response, next) => {
 //endPoints 
 
 //endPoint para listar os Estados
-app.get('/estados', cors(), async function (request, response, next) {
+app.get('/v1/senai/estados', cors(), async function (request, response, next) {
 
     //Chama a função e retorna os estados
     let listaDeEstados = estadosCidades.getListaDeEstados();
@@ -66,91 +66,171 @@ app.get('/estados', cors(), async function (request, response, next) {
     }
 });
 
-
 //endPoint: Lista as caracteisticas do estado pela sigla.
-app.get('/estado/sigla/:uf', cors(),async function(request, response, next){
+app.get('/v1/senai/estado/sigla/:uf', cors(), async function (request, response, next) {
     //:uf - é uma váriavel que será utilizada para passagem de valores, na URL da requisição
 
     //Recebe o valor da variavel uf, que será encaminhada na URL da requisição
     let siglaEstado = request.params.uf;
     let statusCode;
-    let dadosEstado= {};
+    let dadosEstado = {};
 
     //Tratamento para validar os valores encaminhados no parametro
-    if(siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)){
-        statusCode= 400;
+    if (siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)) {
+        statusCode = 400;
         dadosEstado.message = "Não é possivel processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)";
     } else {
         //Chama a função que filtra o estado pela sigla
         let estado = estadosCidades.getDadosEstados(siglaEstado);
 
         //Valida se houve retorno válido da função
-        if(estado){
+        if (estado) {
             statusCode = 200; // Estado encontrado
             dadosEstado = estado;
-        }else{
+        } else {
             statusCode = 404; // Estado não encontrado
         }
     }
-    
+
     response.status(statusCode);
     response.json(dadosEstado);
 });
 
-
-app.get('/capitalEstado/sigla/:uf', cors(), async function(request, response,next){
+app.get('/v1/senai/estado/capital/sigla/:uf', cors(), async function (request, response, next) {
 
     let siglaEstado = request.params.uf;
     let statusCode;
     let dadosEstado = {};
 
-     //Tratamento para validar os valores encaminhados no parametro
-     if(siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)){
-        statusCode= 400;
+    //Tratamento para validar os valores encaminhados no parametro
+    if (siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)) {
+        statusCode = 400;
         dadosEstado.message = "Não é possivel processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)";
     } else {
         //Chama a função que filtra o estado pela sigla
         let estado = estadosCidades.getCapitalEstado(siglaEstado);
 
         //Valida se houve retorno válido da função
-        if(estado){
+        if (estado) {
             statusCode = 200; // Estado encontrado
             dadosEstado = estado;
-        }else{
+        } else {
             statusCode = 404; // Estado não encontrado
         }
     }
-    
+
     response.status(statusCode);
     response.json(dadosEstado);
 
 
 });
 
-app.get('/estadoRegiao/regiao/:regiao', cors(), async function(request, response,next){
+app.get('/v1/senai/estado/regiao/:regiao', cors(), async function (request, response, next) {
 
     let estadoRegiao = request.params.regiao;
     let statusCode;
-    let dadosEstado = {};
+    let dadosRegiao = {};
 
-    if(estadoRegiao == ''|| estadoRegiao == undefined || !isNaN(estadoRegiao)){
-        statusCode= 400;
-        dadosEstado.message = "Não é possivel processar a requisição pois a região não foi informada"
-    }else {
+    if (estadoRegiao == '' || estadoRegiao == undefined || !isNaN(estadoRegiao)) {
+        statusCode = 400;
+        dadosRegiao.message = "Não é possivel processar a requisição pois a região não foi informada"
+    }
+    else {
         //Chama a função que filtra o estado pela sigla
         let regiao = estadosCidades.getEstadosRegiao(estadoRegiao);
 
         //Valida se houve retorno válido da função
-        if(regiao){
+        if (regiao) {
             statusCode = 200; // Estado encontrado
-            dadosEstado = estado;
-        }else{
+            dadosRegiao = regiao;
+        } else {
             statusCode = 404; // Estado não encontrado
         }
     }
-    
+
     response.status(statusCode);
-    response.json(dadosEstado);
+    response.json(dadosRegiao);
+});
+
+
+app.get('/v1/senai/estado/capital', cors(), async function (request, response, next) {
+
+    let listaCapitalPais = estadosCidades.getCapitalPais();
+    if (listaCapitalPais) {
+
+        response.json(listaCapitalPais)
+        response.status(200);
+    } else {
+        response.status(500);
+    }
+});
+
+// app.get('/cidades', cors(), async function(request, response,next){
+
+//     let siglaEstado = request.params.uf;
+//     let statusCode;
+//     let dadosCidade = {};
+
+//      //Tratamento para validar os valores encaminhados no parametro
+//      if(siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)){
+//         statusCode= 400;
+//         dadosCidade.message = "Não é possivel processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)";
+//     } else {
+//         //Chama a função que filtra o estado pela sigla
+//         let cidade = estadosCidades.getCidades(siglaEstado);
+
+//         //Valida se houve retorno válido da função
+//         if(cidade){
+//             statusCode = 200; // Estado encontrado
+//             dadosCidade = cidade;
+//         }else{
+//             statusCode = 404; // Estado não encontrado
+//         }
+//     } 
+//     response.status(statusCode);
+//     response.json(dadosCidade);
+// });
+
+// EndPoint: LIsta de cidades filtrada pela sigla do estado
+app.get('/v1/senai/cidades', cors(), async function (request, response, next) {
+
+    // Recebe o valor da variavel que será enviada por QueryString
+    //EX: www.uol.com.br?uf+sp
+
+    /**
+     * Usamos a query para receber diversas váriaveis para realizar filtros 
+     * Usamos o parms para receber o ID, geralmente para fazer PUT, DELETE e GET
+     */
+
+    let siglaEstado = request.query.uf;
+    let statusCode;
+    let dadosCidade = {};
+
+    //Tratamento para validar os valores encaminhados no parametro
+    if (siglaEstado == '' || siglaEstado == undefined || siglaEstado.length != 2 || !isNaN(siglaEstado)) {
+        statusCode = 400;
+        dadosCidade.message = "Não é possivel processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)";
+    } else {
+        //Chama a função que filtra o estado pela sigla
+        let cidade = estadosCidades.getCidades(siglaEstado);
+
+        //Valida se houve retorno válido da função
+        if (cidade) {
+            statusCode = 200; // Estado encontrado
+            dadosCidade = cidade;
+        } else {
+            statusCode = 404; // Estado não encontrado
+        }
+    }
+    response.status(statusCode);
+    response.json(dadosCidade);
+
+});
+
+//EndPoint versão 2: Lista de cidades filtrada pela sigla do estado
+// com mais detalhes
+app.get('/v2/senai/cidades', cors(), async function(request, response, next){
+
 });
 
 
