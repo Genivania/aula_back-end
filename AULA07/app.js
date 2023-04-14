@@ -5,6 +5,15 @@
  * Versão: 1.0
  ****************************************************************************/
 
+/**
+    Para realizar  a conexão com Banco e dados iremos utilizar o PRISMA
+        npm install prisma --save
+        npx prisma
+        npx prisma init
+        npm install @prisma/client
+
+ */
+
  //Import das bibliotecas do projeto
  const express = require('express');
  const cors = require('cors');
