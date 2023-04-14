@@ -7,6 +7,8 @@
  ****************************************************************************/
 
 /**
+ * caso não for da um npm init
+ * 
  * Express - dependencia do Node, que permite a integração entre o protocolo http com o código
  *     npm install express --save
  * 
