@@ -229,9 +229,9 @@ app.get('/v1/senai/cidades', cors(), async function (request, response, next) {
 
 //EndPoint versão 2: Lista de cidades filtrada pela sigla do estado
 // com mais detalhes
-app.get('/v2/senai/cidades', cors(), async function(request, response, next){
+// app.get('/v2/senai/cidades', cors(), async function(request, response, next){
 
-});
+// });
 
 
 
