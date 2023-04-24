@@ -6,6 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+//Criação de uma entidade no Banco de dados
+model tbl_teste_prisma {
+  id Int @id @default(autoincrement())
+  nome String 
 }
